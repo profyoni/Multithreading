@@ -7,9 +7,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
+class MC
+{
+    public static List<Integer> syncList(List<Integer> list)
+    {
+        return new MyThreadSafeList(list);
+    }
+}
 class MyThread extends Thread
 {
-    public static List<Integer> list =new ArrayList<>();
+    public static List<Integer> list =
+            MC.syncList(new ArrayList());
+    // dont maintain a reference to the ArrayList
+
     @Override
     public void run()
     {
