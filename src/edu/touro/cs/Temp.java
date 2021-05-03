@@ -20,14 +20,20 @@ class MC
 
 class MyTask implements Runnable
 {
+    private final int max;
+
+    MyTask(int max)
+    {
+        this.max = max;
+    }
     public static List<Integer> list =
         MC.syncList(new ArrayList());
 
     @Override
     public void run()
     {
-        for (int i =0;i<10_000_000;i++)
-            list.add(i);
+        for (int i =0;i<1000000;i++)
+            System.out.println(max);
     }
 }
 
@@ -40,15 +46,15 @@ class MyThread extends Thread
     @Override
     public void run()
     {
-        for (int i =0;i<10_000_000;i++)
+        for (int i =0;i<10_000;i++)
             list.add(i);
     }
 }
 
 public class Temp {
     public static void main(String[] args) throws InterruptedException {
-//        Thread t1 = new Thread(new MyRunnable()),
-//               t2 = new Thread(new MyRunnable());
+//        Thread t1 = new Thread(new MyTask()),
+//               t2 = new Thread(new MyTask());
 //
 //        t1.start();
 //        t2.start();
@@ -56,15 +62,15 @@ public class Temp {
 //        t1.join();
 //        t2.join();
 //
-//        System.out.println( MyRunnable.list.size());
+//        System.out.println( MyTask.list.size());
 //System.exit(0);
 
 
 
-        ExecutorService es = Executors.newFixedThreadPool(2);
-        es.submit( new MyTask() );
-        es.submit( new MyTask() );
-
+        ExecutorService es = Executors.newFixedThreadPool(5);
+        for (int i=0;i<10;i++) {
+            es.execute(new MyTask(i));
+        }
         es.shutdown();
 
         es.awaitTermination(10, TimeUnit.SECONDS);
