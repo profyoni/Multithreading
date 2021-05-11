@@ -2,10 +2,7 @@ package edu.touro.cs;
 
 // TODO : Replace this file with your code
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -20,20 +17,23 @@ class MC
 
 class MyTask implements Runnable
 {
-    private final int max;
+    private final int threadNum;
 
-    MyTask(int max)
+    MyTask(int threadNum)
     {
-        this.max = max;
+        this.threadNum = threadNum;
     }
-    public static List<Integer> list =
-        MC.syncList(new ArrayList());
 
     @Override
     public void run()
     {
-        for (int i =0;i<1000000;i++)
-            System.out.println(max);
+        System.out.println(
+               System.currentTimeMillis() + "Start :" + threadNum);
+        double sleepTime = new Random().nextDouble() * 5 * 1_000;
+        try {
+            Thread.sleep((int)sleepTime);
+        } catch (InterruptedException e) {}
+        System.out.println(System.currentTimeMillis() + "Ended :" + threadNum);
     }
 }
 
@@ -67,17 +67,17 @@ public class Temp {
 
 
 
-        ExecutorService es = Executors.newFixedThreadPool(5);
+        ExecutorService es = Executors.newFixedThreadPool(2);
         for (int i=0;i<10;i++) {
             es.execute(new MyTask(i));
         }
         es.shutdown();
 
-        es.awaitTermination(10, TimeUnit.SECONDS);
+        es.awaitTermination(10, TimeUnit.HOURS);
 //        while (! es.isTerminated())
 //            Thread.sleep(100);// do nothing
 
 
-        System.out.println( MyTask.list.size());
+
     }
 }
